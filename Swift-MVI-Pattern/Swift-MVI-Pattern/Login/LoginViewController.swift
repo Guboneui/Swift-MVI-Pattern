@@ -12,10 +12,8 @@ import SnapKit
 import RxSwift
 import RxRelay
 
-class LoginViewController:
-  UIViewController
-{
-
+class LoginViewController: UIViewController {
+  
   private let idTextField: UITextField = UITextField().then {
     $0.placeholder = "ID"
     $0.borderStyle = .roundedRect
@@ -33,9 +31,13 @@ class LoginViewController:
     $0.layer.cornerRadius = 8
   }
   
-  private let intent: LoginViewIntent = LoginViewIntent()
+  private let intent: LoginViewIntentProtocol
   private let disposeBag: DisposeBag = DisposeBag()
   
+  init(intent: LoginViewIntentProtocol) {
+    self.intent = intent
+    super.init(nibName: nil, bundle: nil)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -94,4 +96,8 @@ class LoginViewController:
     }
   }
   
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 }

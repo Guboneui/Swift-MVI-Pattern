@@ -9,22 +9,27 @@ import Foundation
 import RxSwift
 import RxRelay
 
-class LoginViewIntent {
-  let stateObserver: PublishRelay<LoginState> = PublishRelay<LoginState>()
-  let repository: LoginRepository = LoginRepository()
-  let disposeBag: DisposeBag = DisposeBag()
+protocol LoginViewIntentProtocol {
+  func bind(viewController: LoginViewController)
+  func didTapSignUpButton(id: String, pw: String)
+}
+
+class LoginViewIntent: LoginViewIntentProtocol {
   
-  var viewController: LoginViewController?
+  private let stateObserver: PublishRelay<LoginState> = PublishRelay<LoginState>()
+  private let repository: LoginRepository = LoginRepository()
+  private let disposeBag: DisposeBag = DisposeBag()
+  
+  private var viewController: LoginViewController?
+  
   
   func bind(viewController: LoginViewController) {
     self.viewController = viewController
-    
     stateObserver
       .subscribe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] state in
         guard let self else { return }
         self.viewController?.render(state)
-        
       }).disposed(by: disposeBag)
   }
   
